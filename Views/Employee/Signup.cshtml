@@ -1,0 +1,83 @@
+﻿@model MVCLearningsPOC.Models.Employee
+
+@{
+    ViewData["Title"] = "Employee Registration";
+}
+
+<div class="container mt-5">
+    <div class="card shadow-lg p-4 rounded">
+        <h2 class="text-center mb-4">Employee Registration Form</h2>
+
+        @if (ViewBag.Message != null)
+        {
+            <div class="alert alert-success text-center">
+                @ViewBag.Message
+            </div>
+        }
+
+        <form asp-action="Register" method="post">
+
+            <!-- Full Name -->
+            <div class="mb-3">
+                <label class="form-label">Full Name</label>
+                <input asp-for="FullName" class="form-control" placeholder="Enter full name" />
+                <span asp-validation-for="FullName" class="text-danger"></span>
+            </div>
+
+            <!-- Email -->
+            <div class="mb-3">
+                <label class="form-label">Email</label>
+                <input asp-for="Email" class="form-control" placeholder="Enter email" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+
+            <!-- Department -->
+            <div class="mb-3">
+                <label class="form-label">Department</label>
+                <select asp-for="Department" class="form-select">
+                    <option value="">-- Select Department --</option>
+                    <option>HR</option>
+                    <option>IT</option>
+                    <option>Finance</option>
+                    <option>Marketing</option>
+                </select>
+                <span asp-validation-for="Department" class="text-danger"></span>
+            </div>
+
+            <!-- Gender -->
+            <div class="mb-3">
+                <label class="form-label">Gender</label>
+                <div>
+                    <input type="radio" asp-for="Gender" value="Male" /> Male
+                    <input type="radio" asp-for="Gender" value="Female" class="ms-3" /> Female
+                </div>
+                <span asp-validation-for="Gender" class="text-danger"></span>
+            </div>
+
+            <!-- Date of Joining -->
+            <div class="mb-3">
+                <label class="form-label">Date of Joining</label>
+                <input asp-for="DateOfJoining" class="form-control" />
+                <span asp-validation-for="DateOfJoining" class="text-danger"></span>
+            </div>
+
+            <!-- Salary -->
+            <div class="mb-3">
+                <label class="form-label">Salary</label>
+                <input asp-for="Salary" class="form-control" placeholder="Enter salary" />
+                <span asp-validation-for="Salary" class="text-danger"></span>
+            </div>
+
+            <!-- Submit Button -->
+            <div class="text-center">
+                <button type="submit" class="btn btn-primary px-5">
+                    Register Employee
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
