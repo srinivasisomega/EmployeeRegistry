@@ -1,9 +1,18 @@
 ﻿using Microsoft.EntityFrameworkCore;
-
+using MVCLearningsPOC.Models;
 namespace MVCLearningsPOC.Data
 {
-    public class EmployeeDbContext:DbContext
+    public class EmployeeDbContext : DbContext
     {
+        public EmployeeDbContext(
+            DbContextOptions<EmployeeDbContext> options)
+            : base(options)
+        {
+        }
+
+        public DbSet<Employee> Employees { get; set; }
+        public DbSet<Department> Departments { get; set; }
 
     }
 }
+

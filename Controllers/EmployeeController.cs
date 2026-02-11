@@ -1,10 +1,18 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using MVCLearningsPOC.Models;
+using MVCLearningsPOC.Repository.Interface;
 
 namespace MVCLearningsPOC.Controllers
 {
     public class EmployeeController : Controller
     {
+        private readonly IRepository<Employee> _repository;
+
+        public EmployeeController(IRepository<Employee> repository)
+        {
+            _repository = repository;
+        }
         public IActionResult Signup()
         {
             return View();
@@ -25,17 +33,18 @@ namespace MVCLearningsPOC.Controllers
         // POST: EmployeeController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public IActionResult Register(Employee employee)
         {
-            try
+            if (ModelState.IsValid)
             {
-                return RedirectToAction(nameof(Index));
+                _repository.Add(employee);
+                _repository.Save();
+                return RedirectToAction(nameof(Signup));
             }
-            catch
-            {
-                return View();
-            }
+
+            return Signup();
         }
+
 
         // GET: EmployeeController/Edit/5
         public ActionResult Edit(int id)

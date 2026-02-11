@@ -1,0 +1,12 @@
+﻿@model List<SelectListItem>
+
+<select name="DepartmentId" class="form-select">
+    <option value="">-- Select Department --</option>
+
+    @foreach (var item in Model)
+    {
+        <option value="@item.Value" selected="@item.Selected">
+            @item.Text
+        </option>
+    }
+</select>

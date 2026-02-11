@@ -1,0 +1,44 @@
+﻿@model IEnumerable<MVCLearningsPOC.Models.DepartmentListViewModel>
+
+@{
+    ViewData["Title"] = "Departments";
+}
+
+<h2>Departments</h2>
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">@TempData["Error"]</div>
+}
+
+<p>
+    <a asp-action="Create" class="btn btn-success">Create New Department</a>
+</p>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Department</th>
+            <th>Employees</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var d in Model)
+        {
+            <tr>
+                <td>@d.DepartmentName</td>
+                <td>@d.EmployeeCount</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@d.DepartmentId" class="btn btn-sm btn-primary">Edit</a>
+
+                    <form asp-action="Delete" method="post" style="display:inline-block" onsubmit="return confirm('Delete this department?');">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="id" value="@d.DepartmentId" />
+                        <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
