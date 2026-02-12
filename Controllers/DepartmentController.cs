@@ -103,26 +103,67 @@ namespace MVCLearningsPOC.Controllers
         }
 
 
-        // POST: Department/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
+        // GET: Department/Delete/5
         public async Task<IActionResult> Delete(int id)
         {
-            var dept = await _context.Departments.FindAsync(id);
-            if (dept == null) return NotFound();
+            var dept = await _context.Departments
+                .FirstOrDefaultAsync(d => d.DepartmentId == id);
 
-            // If you want to prevent delete when employees exist, check employee count:
-            var employeeCount = await _context.Employees.CountAsync(e => e.DepartmentId == id);
-            if (employeeCount > 0)
+            if (dept == null)
+                return NotFound();
+
+            var employeeCount = await _context.Employees
+                .CountAsync(e => e.DepartmentId == id);
+
+            var model = new DepartmentDeleteViewModel
             {
-                // add a model error or TempData notification
-                TempData["Error"] = $"Cannot delete '{dept.DepartmentName}' - it has {employeeCount} employees.";
+                DepartmentId = dept.DepartmentId,
+                DepartmentName = dept.DepartmentName,
+                EmployeeCount = employeeCount
+            };
+
+            return View(model);
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(DepartmentDeleteViewModel model)
+        {
+            var dept = await _context.Departments.FindAsync(model.DepartmentId);
+            var deptIdUnAssigned = await _context.Departments
+                .Where(x => x.DepartmentName == "Unassigned")
+                .Select(x => x.DepartmentId)
+                .FirstOrDefaultAsync();
+
+            if (deptIdUnAssigned == 0)
+            {
+                TempData["Error"] = "Unassigned department not found.";
                 return RedirectToAction(nameof(Index));
+            }
+            if (dept == null)
+                return NotFound();
+
+            var employees = await _context.Employees
+                .Where(e => e.DepartmentId == model.DepartmentId)
+                .ToListAsync();
+
+            if (employees.Any())
+            {
+                if (model.DeleteEmployees)
+                {
+                    _context.Employees.RemoveRange(employees);
+                }
+                else
+                {
+                    foreach (var emp in employees)
+                        emp.DepartmentId = deptIdUnAssigned; 
+                }
             }
 
             _context.Departments.Remove(dept);
             await _context.SaveChangesAsync();
+
             return RedirectToAction(nameof(Index));
         }
+
     }
 }

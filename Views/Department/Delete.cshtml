@@ -1,0 +1,35 @@
+﻿@model DepartmentDeleteViewModel
+
+<h2>Delete Department</h2>
+
+<div class="alert alert-warning">
+    Are you sure you want to delete
+    <strong>@Model.DepartmentName</strong>?
+</div>
+
+<form asp-action="DeleteConfirmed" method="post">
+    @Html.AntiForgeryToken()
+
+    <input type="hidden" asp-for="DepartmentId" />
+
+    @if (Model.EmployeeCount > 0)
+    {
+        <p>This department has @Model.EmployeeCount employees.</p>
+
+        <div class="form-check">
+            <input asp-for="DeleteEmployees" class="form-check-input" />
+            <label asp-for="DeleteEmployees" class="form-check-label">
+                Delete all employees in this department
+            </label>
+        </div>
+
+        <small class="text-muted">
+            If unchecked, employees will be moved to "Unassigned".
+        </small>
+    }
+
+    <br />
+
+    <button type="submit" class="btn btn-danger">Confirm Delete</button>
+    <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+</form>

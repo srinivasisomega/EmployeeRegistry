@@ -32,11 +32,11 @@
                 <td>
                     <a asp-action="Edit" asp-route-id="@d.DepartmentId" class="btn btn-sm btn-primary">Edit</a>
 
-                    <form asp-action="Delete" method="post" style="display:inline-block" onsubmit="return confirm('Delete this department?');">
-                        @Html.AntiForgeryToken()
-                        <input type="hidden" name="id" value="@d.DepartmentId" />
-                        <button type="submit" class="btn btn-sm btn-danger">Delete</button>
-                    </form>
+                    <a asp-action="Delete"
+                       asp-route-id="@d.DepartmentId"
+                       class="btn btn-sm btn-danger">
+                        Delete
+                    </a>
                 </td>
             </tr>
         }
